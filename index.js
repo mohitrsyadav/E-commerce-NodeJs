@@ -15,7 +15,7 @@ app.post("/registor", async (req, resp) => {
     result = result.toObject();
     delete result.password;
     resp.send(result);
-    console.log("Test", result);
+    
 });
 
 // Login API===>
@@ -73,6 +73,7 @@ app.get("/product/:id", async (req, resp) => {
         resp.send({ result: "No recond found" });
     }
 })
+// Update Product API ===>
 
 app.put("/product/:id", async (req, resp) => {
     let result = await Product.updateOne(
@@ -81,6 +82,18 @@ app.put("/product/:id", async (req, resp) => {
             $set: req.body
         }
     )
+    resp.send(result);
+})
+
+// Search Product API===>
+app.get("/search/:key", async (req, resp) => {
+    let result = await Product.find({
+        "$or": [
+            { name: { $regex: req.params.key } },
+            { company: { $regex: req.params.key } },
+            { category: { $regex: req.params.key } }
+        ]
+    });
     resp.send(result);
 })
 
